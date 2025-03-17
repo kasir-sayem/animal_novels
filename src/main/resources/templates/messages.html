@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Messages - István Fekete's Animal Characters</title>
+</head>
+<body>
+    <div th:replace="~{layout :: content(~{::div.content})}">
+        <div class="content">
+            <h1>Messages</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Subject</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="message : ${messages}">
+                                <td th:text="${#temporals.format(message.sentAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+                                <td th:text="${message.user != null ? message.user.username : (message.name != null ? message.name : 'Guest')}">Name</td>
+                                <td th:text="${message.subject}">Subject</td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" data-bs-toggle="modal" th:data-bs-target="'#messageModal' + ${message.id}">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Message Modals -->
+            <div th:each="message : ${messages}" th:id="'messageModal' + ${message.id}" class="modal fade" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" th:text="${message.subject}">Subject</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>From:</strong> <span th:text="${message.user != null ? message.user.username : (message.name != null ? message.name : 'Guest')}">Name</span></p>
+                            <p><strong>Email:</strong> <span th:text="${message.email}">Email</span></p>
+                            <p><strong>Date:</strong> <span th:text="${#temporals.format(message.sentAt, 'yyyy-MM-dd HH:mm')}">Date</span></p>
+                            <hr>
+                            <p th:text="${message.content}">Content</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

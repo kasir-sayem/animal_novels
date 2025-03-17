@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Contact - István Fekete's Animal Characters</title>
+</head>
+<body>
+    <div th:replace="~{layout :: content(~{::div.content})}">
+        <div class="content">
+            <h1>Contact Us</h1>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-success" th:if="${param.success}">
+                        Your message has been sent successfully! We'll get back to you soon.
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <form th:action="@{/contact}" th:object="${message}" method="post">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Your Name</label>
+                                    <input type="text" th:field="*{name}" class="form-control" required>
+                                    <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Your Email</label>
+                                    <input type="email" th:field="*{email}" class="form-control" required>
+                                    <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="subject" class="form-label">Subject</label>
+                                    <input type="text" th:field="*{subject}" class="form-control" required>
+                                    <div class="text-danger" th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="content" class="form-label">Message</label>
+                                    <textarea th:field="*{content}" class="form-control" rows="5" required></textarea>
+                                    <div class="text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">About István Fekete's Animal Characters</h5>
+                            <p class="card-text">
+                                Our website is dedicated to preserving and celebrating the animal characters from István Fekete's beloved novels. 
+                                If you have any questions, suggestions, or would like to contribute to our collection, please feel free to reach out to us.
+                            </p>
+                            <h6 class="mt-4">Why Contact Us?</h6>
+                            <ul>
+                                <li>Share your favorite animal characters from István Fekete's novels</li>
+                                <li>Suggest improvements to our database</li>
+                                <li>Ask questions about the novels or characters</li>
+                                <li>Report any issues with the website</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
