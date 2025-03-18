@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Manage Messages - István Fekete's Animal Characters</title>
+</head>
+<body>
+    <main class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Manage Messages</h1>
+            <a th:href="@{/admin}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Contact Messages</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Sender Name</th>
+                                <th>Email</th>
+                                <th>Date</th>
+                                <th>Subject</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="message : ${messages}">
+                                <td th:text="${message.id}">1</td>
+                                <td th:text="${message.name}">John Doe</td>
+                                <td th:text="${message.email}">john@example.com</td>
+                                <td th:text="${#temporals.format(message.createdAt, 'yyyy-MM-dd HH:mm')}">2025-03-18 14:30</td>
+                                <td th:text="${message.subject}">Question about Vuk</td>
+                                <td>
+                                    <span th:if="${message.read}" class="badge bg-success">Read</span>
+                                    <span th:unless="${message.read}" class="badge bg-danger">Unread</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a th:href="@{/admin/messages/view/{id}(id=${message.id})}" class="btn btn-sm btn-primary">View</a>
+                                        <form th:action="@{/admin/messages/delete/{id}(id=${message.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this message?');">
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- If no messages found -->
+                            <tr th:if="${#lists.isEmpty(messages)}">
+                                <td colspan="7" class="text-center">No messages found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

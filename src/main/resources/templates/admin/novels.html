@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Manage Novels - István Fekete's Animal Characters</title>
+</head>
+<body>
+    <main class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Manage Novels</h1>
+            <a th:href="@{/admin}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Novel List</h5>
+                <a th:href="@{/admin/novels/add}" class="btn btn-success">Add New Novel</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Year Published</th>
+                                <th>Characters</th>
+                                <th>Synopsis</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="novel : ${novels}">
+                                <td th:text="${novel.id}">1</td>
+                                <td th:text="${novel.title}">Vuk</td>
+                                <td th:text="${novel.yearPublished}">1965</td>
+                                <td th:text="${novel.characters?.size() ?: 0}">3</td>
+                                <td th:text="${#strings.abbreviate(novel.synopsis, 100)}">A young fox...</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a th:href="@{/admin/novels/edit/{id}(id=${novel.id})}" class="btn btn-sm btn-primary">Edit</a>
+                                        <form th:action="@{/admin/novels/delete/{id}(id=${novel.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this novel?');">
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- If no novels found -->
+                            <tr th:if="${#lists.isEmpty(novels)}">
+                                <td colspan="6" class="text-center">No novels found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

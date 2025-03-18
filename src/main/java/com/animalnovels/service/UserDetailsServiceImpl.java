@@ -29,7 +29,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         
         List<GrantedAuthority> authorities = new ArrayList<>();
         // Make sure to add the ROLE_ prefix as Spring Security expects it
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        String role = user.getRole();
+        if (!role.startsWith("ROLE_")) {
+            role = "ROLE_" + role;
+        }
+        authorities.add(new SimpleGrantedAuthority(role));
         
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),

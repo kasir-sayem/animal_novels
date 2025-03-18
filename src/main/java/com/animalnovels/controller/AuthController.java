@@ -27,13 +27,16 @@ public class AuthController {
 
     @GetMapping("/login-success")
     public String loginSuccess(Authentication authentication) {
-        // Check if user has ADMIN role
-        if (authentication != null && 
-            authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            return "redirect:/admin"; // Redirect admins to admin dashboard
-        } else {
-            return "redirect:/"; // Redirect regular users to home page
+        if (authentication != null) {
+            // Your UserDetailsServiceImpl adds "ROLE_" prefix to roles
+            // So we need to check for "ROLE_ADMIN" specifically
+            boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                
+            if (isAdmin) {
+                return "redirect:/admin";
+            }
         }
+        return "redirect:/";
     }
 
     @GetMapping("/register")
