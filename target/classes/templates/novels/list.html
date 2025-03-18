@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Novels - István Fekete's Animal Characters</title>
+</head>
+<body>
+    <div th:replace="~{layout :: content(~{::div.content})}">
+        <div class="content">
+            <h1>Novels by István Fekete</h1>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4" th:each="novel : ${novels}">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${novel.title}">Novel Title</h5>
+                            <h6 class="card-subtitle mb-2 text-muted" th:text="${novel.pyear}">Publication Year</h6>
+                            <p class="card-text" th:text="${'Publisher: ' + novel.publisher}">Publisher</p>
+                            <p class="card-text">
+                                Features <span th:text="${novel.animals.size()}">0</span> animal character(s).
+                            </p>
+                            <a th:href="@{/novels/{id}(id=${novel.id})}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -3,17 +3,18 @@ package com.animalnovels.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
     
     @Autowired
     private UserDetailsService userDetailsService;
@@ -23,28 +24,48 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
     
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+            .userDetailsService(userDetailsService)
+            .passwordEncoder(passwordEncoder())
+            .and()
+            .build();
     }
     
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-                .antMatchers("/", "/home", "/register", "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/messages/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/api/**").permitAll() // For API access
+            // Disable CSRF temporarily for debugging
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                // Make sure login page and its processing URL are accessible
+                .requestMatchers("/login", "/login?error", "/login?logout", "/perform_login").permitAll()
+                // Public resources
+                .requestMatchers("/", "/home", "/register", "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                // Additional public pages
+                .requestMatchers("/about", "/contact").permitAll()
+                // Secured paths
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/messages/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()
-            .and()
-            .formLogin()
+            )
+            .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/home")
+                .loginProcessingUrl("/perform_login") // Explicit processing URL
+                .defaultSuccessUrl("/home", true) // Force redirect to home
+                .failureUrl("/login?error=true") // Explicit failure URL
                 .permitAll()
-            .and()
-            .logout()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/perform_logout")
                 .logoutSuccessUrl("/home")
-                .permitAll();
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .permitAll()
+            );
+            
+        return http.build();
     }
 }
