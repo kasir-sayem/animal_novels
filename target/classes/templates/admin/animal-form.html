@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title th:text="${animal.id == null ? 'Add New Animal' : 'Edit Animal'} + ' - István Fekete\'s Animal Characters'"></title>
+</head>
+<body>
+    <main class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 th:text="${animal.id == null ? 'Add New Animal' : 'Edit Animal'}"></h1>
+            <a th:href="@{/admin/animals}" class="btn btn-secondary">Back to Animals</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Animal Details</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/admin/animals/save}" th:object="${animal}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" th:field="*{aname}" required />
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('aname')}" th:errors="*{aname}"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="species" class="form-label">Species</label>
+                        <input type="text" class="form-control" id="species" th:field="*{species}" required />
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('species')}" th:errors="*{species}"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="novel" class="form-label">Novel</label>
+                        <select class="form-select" id="novel" th:field="*{novel}" required>
+                            <option value="">-- Select a Novel --</option>
+                            <option th:each="novel : ${novels}" 
+                                    th:value="${novel.id}" 
+                                    th:text="${novel.title}"></option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" th:field="*{description}" rows="4" required></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="personality" class="form-label">Personality</label>
+                        <input type="text" class="form-control" id="personality" th:field="*{personality}" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="appearance" class="form-label">Appearance</label>
+                        <input type="text" class="form-control" id="appearance" th:field="*{appearance}" />
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Animal</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

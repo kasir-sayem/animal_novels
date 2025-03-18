@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Manage Animals - István Fekete's Animal Characters</title>
+</head>
+<body>
+    <main class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Manage Animals</h1>
+            <a th:href="@{/admin}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Animal Characters</h5>
+                <a th:href="@{/admin/animals/add}" class="btn btn-success">Add New Animal</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Species</th>
+                                <th>Novel</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="animal : ${animals}">
+                                <td th:text="${animal.id}">1</td>
+                                <td th:text="${animal.name}">Vuk</td>
+                                <td th:text="${animal.species}">Fox</td>
+                                <td th:text="${animal.novel?.title}">Vuk</td>
+                                <td th:text="${#strings.abbreviate(animal.description, 100)}">A young fox...</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a th:href="@{/admin/animals/edit/{id}(id=${animal.id})}" class="btn btn-sm btn-primary">Edit</a>
+                                        <form th:action="@{/admin/animals/delete/{id}(id=${animal.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this animal?');">
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- If no animals found -->
+                            <tr th:if="${#lists.isEmpty(animals)}">
+                                <td colspan="6" class="text-center">No animals found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

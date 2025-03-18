@@ -2,117 +2,106 @@ package com.animalnovels.model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "messages")
 public class Message {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotBlank
-    @Size(max = 100)
+    @NotBlank(message = "Name is required")
     private String name;
     
-    @NotBlank
-    @Size(max = 100)
-    @Email
+    @NotBlank(message = "Email is required")
+    @Email(message = "Please provide a valid email")
     private String email;
     
-    @NotBlank
-    @Size(max = 200)
+    @NotBlank(message = "Subject is required")
     private String subject;
     
-    @NotBlank
-    @Size(max = 1000)
-    @Column(length = 1000)
+    @NotBlank(message = "Message content is required")
     private String content;
     
-    private LocalDateTime sentAt;
+    private LocalDateTime sentAt = LocalDateTime.now();
+    
+    // Add this field
+    private boolean read = false;
     
     @ManyToOne
-    @JoinColumn(name = "user_id")
     private User user;
     
-    // Constructors
-    public Message() {
-        this.sentAt = LocalDateTime.now();
-    }
+    // Getters and setters
     
-    public Message(String name, String email, String subject, String content) {
-        this.name = name;
-        this.email = email;
-        this.subject = subject;
-        this.content = content;
-        this.sentAt = LocalDateTime.now();
-    }
-    
-    // Getters and Setters
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getEmail() {
         return email;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getSubject() {
         return subject;
     }
-    
+
     public void setSubject(String subject) {
         this.subject = subject;
     }
-    
+
     public String getContent() {
         return content;
     }
-    
+
     public void setContent(String content) {
         this.content = content;
     }
-    
+
     public LocalDateTime getSentAt() {
         return sentAt;
     }
-    
+
     public void setSentAt(LocalDateTime sentAt) {
         this.sentAt = sentAt;
     }
-    
+
     public User getUser() {
         return user;
     }
-    
+
     public void setUser(User user) {
         this.user = user;
+    }
+    
+    // Add these methods
+    public boolean isRead() {
+        return read;
+    }
+    
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }

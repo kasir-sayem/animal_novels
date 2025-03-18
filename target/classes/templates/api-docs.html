@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>API Documentation - István Fekete's Animal Characters</title>
+    <style>
+        .endpoint {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .method {
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: white;
+            display: inline-block;
+            width: 60px;
+            text-align: center;
+        }
+        .get { background-color: #28a745; }
+        .post { background-color: #007bff; }
+        .put { background-color: #fd7e14; }
+        .delete { background-color: #dc3545; }
+        .url-path {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+        .param-table {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <main class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>API Documentation</h1>
+            <a th:href="@{/admin}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>API Overview</h5>
+            </div>
+            <div class="card-body">
+                <p>This documentation describes the RESTful API endpoints available for the István Fekete's Animal Characters application. These endpoints allow programmatic access to the application's data.</p>
+                <p>All API requests require authentication except where noted. Authentication is handled using JWT tokens.</p>
+                <p>Base URL: <code>https://yourdomain.com/api</code></p>
+            </div>
+        </div>
+        
+        <h2 class="mb-3">Endpoints</h2>
+        
+        <!-- Authentication -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Authentication</h5>
+            </div>
+            <div class="card-body">
+                <div class="endpoint">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="method post">POST</span>
+                        <span class="url-path ms-2">/api/auth/login</span>
+                    </div>
+                    <p>Authenticate a user and return a JWT token.</p>
+                    <h6>Request Body:</h6>
+                    <pre><code>{
+  "username": "string",
+  "password": "string"
+}</code></pre>
+                    <h6>Response:</h6>
+                    <pre><code>{
+  "token": "string",
+  "type": "Bearer",
+  "username": "string",
+  "roles": ["string"]
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Animals -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Animals</h5>
+            </div>
+            <div class="card-body">
+                <div class="endpoint">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="method get">GET</span>
+                        <span class="url-path ms-2">/api/animals</span>
+                    </div>
+                    <p>Returns a list of all animal characters.</p>
+                    <h6>Query Parameters:</h6>
+                    <table class="table table-sm param-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>species</td>
+                                <td>string</td>
+                                <td>Filter by animal species</td>
+                            </tr>
+                            <tr>
+                                <td>novel</td>
+                                <td>integer</td>
+                                <td>Filter by novel ID</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="endpoint">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="method get">GET</span>
+                        <span class="url-path ms-2">/api/animals/{id}</span>
+                    </div>
+                    <p>Returns details for a specific animal character.</p>
+                    <h6>Path Parameters:</h6>
+                    <table class="table table-sm param-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td>integer</td>
+                                <td>Animal ID</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="endpoint">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="method post">POST</span>
+                        <span class="url-path ms-2">/api/animals</span>
+                    </div>
+                    <p>Creates a new animal character. Requires admin privileges.</p>
+                    <h6>Request Body:</h6>
+                    <pre><code>{
+  "name": "string",
+  "species": "string",
+  "novelId": integer,
+  "description": "string",
+  "traits": ["string"]
+}</code></pre>
+                </div>
+                
+                <div class="endpoint">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="method put">PUT</span>
+                        <span class="url-path ms-2">/api/animals/{id}</span>
+                    </div>
+                    <p>Updates an existing animal character. Requires admin privileges.</p>
+                    <h6>Path Parameters:</h6>
+                    <table class="table table-sm param-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td>integer</td>
+                                <td>Animal ID</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h6>Request Body:</h6>
+                    <pre><code>{
+  "name": "string",
+  "species": "string",
+  "novelId": integer,
+  "description": "string",
+  "traits": ["string"]
+}</code></pre>
+                </div>
+                
+                <div class="endpoint">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="method delete">DELETE</span>
+                        <span class="url-path ms-2">/api/animals/{id}</span>
+                    </div>
+                    <p>Deletes an animal character. Requires admin privileges.</p>
+                    <h6>Path Parameters:</h6>
+                    <table class="table table-sm param-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td>integer</td>
+                                <td>Animal ID</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Novels -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Novels</h5>
+            </div>
+            <div class="card-body">
+                <div class="endpoint">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="method get">GET</span>
+                        <span class="url-path ms-2">/api/novels</span>
+                    </div>
+                    <p>Returns a list of all novels.</p>
+                </div>
+                
+                <div class="endpoint">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="method get">GET</span>
+                        <span class="url-path ms-2">/api/novels/{id}</span>
+                    </div>
+                    <p>Returns details for a specific novel, including its animal characters.</p>
+                    <h6>Path Parameters:</h6>
+                    <table class="table table-sm param-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td>integer</td>
+                                <td>Novel ID</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Additional novel endpoints would go here -->
+            </div>
+        </div>
+    </main>
+</body>
+</html>
