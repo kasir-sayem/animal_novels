@@ -1,4 +1,4 @@
-package com.animalnovels.config;
+package com.animalnovels.config; // Update this package name to match your project
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -39,28 +39,35 @@ public class SecurityConfig {
             // Disable CSRF temporarily for debugging
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                // Make sure login page and its processing URL are accessible
-                .requestMatchers("/login", "/login?error", "/login?logout", "/perform_login").permitAll()
-                // Public resources
-                .requestMatchers("/", "/home", "/register", "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                // Additional public pages
-                .requestMatchers("/about", "/contact").permitAll()
-                // Secured paths
+                // Public resources - accessible to everyone
+                .requestMatchers("/", "/home", "/register", "/login", "/perform_login", "/about", "/contact").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                
+                // Make animals and novels pages accessible to authenticated users
+                .requestMatchers("/animals/**", "/novels/**").authenticated()
+                
+                // Admin-only routes
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                
+                // Routes accessible to both ADMIN and USER roles
                 .requestMatchers("/messages/**").hasAnyRole("ADMIN", "USER")
+                
+                // API paths - public for now, adjust as needed
                 .requestMatchers("/api/**").permitAll()
+                
+                // Any other requests require authentication
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .loginProcessingUrl("/perform_login") // Explicit processing URL
-                .defaultSuccessUrl("/home", true) // Force redirect to home
-                .failureUrl("/login?error=true") // Explicit failure URL
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/home", true)
+                .failureUrl("/login?error=true")
                 .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/perform_logout")
-                .logoutSuccessUrl("/home")
+                .logoutSuccessUrl("/login?logout=true")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .permitAll()

@@ -1,35 +1,43 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 <head>
     <title>Animals - István Fekete's Animal Characters</title>
 </head>
 <body>
-    <div th:replace="~{layout :: content(~{::div.content})}">
-        <div class="content">
-            <h1>Animal Characters</h1>
-            
-            <div class="mb-4">
-                <form th:action="@{/animals}" method="get" class="d-flex">
-                    <input type="text" name="species" class="form-control me-2" placeholder="Filter by species...">
-                    <button type="submit" class="btn btn-primary">Filter</button>
-                </form>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-4 mb-4" th:each="animal : ${animals}">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${animal.aname}">Animal Name</h5>
-                            <h6 class="card-subtitle mb-2 text-muted" th:text="${animal.species}">Species</h6>
-                            <p class="card-text">
-                                Appears in <span th:text="${animal.novels.size()}">0</span> novel(s).
-                            </p>
-                            <a th:href="@{/animals/{id}(id=${animal.id})}" class="btn btn-primary">View Details</a>
-                        </div>
+    <main class="container mt-4">
+        <h1>Animal Characters</h1>
+        
+        <div class="mb-4">
+            <form th:action="@{/animals}" method="get" class="d-flex">
+                <input type="text" name="species" class="form-control me-2" placeholder="Filter by species..." th:value="${param.species}">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a th:if="${param.species}" th:href="@{/animals}" class="btn btn-outline-secondary ms-2">Clear</a>
+            </form>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="animal : ${animals}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${animal.aname}">Animal Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted" th:text="${animal.species}">Species</h6>
+                        <p class="card-text">
+                            Appears in <span th:text="${animal.novels.size()}">0</span> novel(s).
+                        </p>
+                        <a th:href="@{/animals/{id}(id=${animal.id})}" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
             </div>
+            
+            <div class="col-12" th:if="${#lists.isEmpty(animals)}">
+                <div class="alert alert-info">
+                    No animal characters found.
+                    <span th:if="${param.species}">Try a different species filter or <a th:href="@{/animals}">view all animals</a>.</span>
+                </div>
+            </div>
         </div>
-    </div>
+    </main>
 </body>
 </html>
