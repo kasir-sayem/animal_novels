@@ -17,4 +17,24 @@ public class AdminController {
     public String apiDocs() {
         return "api-docs";
     }
+    
+    @GetMapping("/users")
+    public String manageUsers() {
+        return "admin/users";
+    }
+    
+    @GetMapping("/animals")
+    public String manageAnimals() {
+        return "admin/animals";
+    }
+    
+    @GetMapping("/novels")
+    public String manageNovels() {
+        return "admin/novels";
+    }
+    
+    @GetMapping("/messages")
+    public String viewMessages() {
+        return "admin/messages";
+    }
 }

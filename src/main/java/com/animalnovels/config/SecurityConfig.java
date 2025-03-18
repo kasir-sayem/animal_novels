@@ -59,11 +59,12 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/home", true)
-                .failureUrl("/login?error=true")
-                .permitAll()
+            .loginPage("/login")
+            .loginProcessingUrl("/perform_login")
+            .defaultSuccessUrl("/login-success", true) // This is the key change
+            .failureUrl("/login?error=true")
+            .permitAll()
+                
             )
             .logout(logout -> logout
                 .logoutUrl("/perform_logout")
