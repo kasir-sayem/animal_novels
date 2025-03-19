@@ -3,12 +3,12 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 <head>
-    <title th:text="${novel.id == null ? 'Add New Novel' : 'Edit Novel'} + ' - István Fekete\'s Animal Characters'"></title>
+    <title th:text="${novel.id == null ? 'Add New Novel' : 'Edit Novel'} + ' - István Fekete\'s Animal Characters'">Add/Edit Novel</title>
 </head>
 <body>
     <main class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 th:text="${novel.id == null ? 'Add New Novel' : 'Edit Novel'}"></h1>
+            <h1 th:text="${novel.id == null ? 'Add New Novel' : 'Edit Novel'}">Add/Edit Novel</h1>
             <a th:href="@{/admin/novels}" class="btn btn-secondary">Back to Novels</a>
         </div>
         
@@ -27,26 +27,15 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="yearPublished" class="form-label">Year Published</label>
-                        <input type="number" class="form-control" id="yearPublished" th:field="*{pyear}" required min="1900" max="2025" />
+                        <label for="pyear" class="form-label">Year Published</label>
+                        <input type="number" class="form-control" id="pyear" th:field="*{pyear}" required min="1900" max="2025" />
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('pyear')}" th:errors="*{pyear}"></div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="synopsis" class="form-label">Synopsis</label>
-                        <textarea class="form-control" id="synopsis" th:field="*{synopsis}" rows="4" required></textarea>
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('synopsis')}" th:errors="*{synopsis}"></div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="setting" class="form-label">Setting</label>
-                        <input type="text" class="form-control" id="setting" th:field="*{setting}" />
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="coverImageUrl" class="form-label">Cover Image URL</label>
-                        <input type="url" class="form-control" id="coverImageUrl" th:field="*{coverImageUrl}" />
-                        <small class="text-muted">Enter a URL for the novel's cover image</small>
+                        <label for="publisher" class="form-label">Publisher</label>
+                        <input type="text" class="form-control" id="publisher" th:field="*{publisher}" required />
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('publisher')}" th:errors="*{publisher}"></div>
                     </div>
                     
                     <button type="submit" class="btn btn-primary">Save Novel</button>

@@ -12,6 +12,11 @@
             <a th:href="@{/admin}" class="btn btn-secondary">Back to Dashboard</a>
         </div>
         
+        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${success != null}">
+            <span th:text="${success}">Operation successful</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5>Animal Characters</h5>
@@ -25,18 +30,24 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Species</th>
-                                <th>Novel</th>
-                                <th>Description</th>
+                                <th>Novels</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="animal : ${animals}">
+                            <tr th:each="animal : ${animals}" th:if="${animals != null}">
                                 <td th:text="${animal.id}">1</td>
-                                <td th:text="${animal.name}">Vuk</td>
+                                <td th:text="${animal.aname}">Vuk</td>
                                 <td th:text="${animal.species}">Fox</td>
-                                <td th:text="${animal.novel?.title}">Vuk</td>
-                                <td th:text="${#strings.abbreviate(animal.description, 100)}">A young fox...</td>
+                                <td>
+                                    <span th:if="${animal.novels != null && !animal.novels.isEmpty()}">
+                                        <span th:each="novel, iterStat : ${animal.novels}">
+                                            <span th:text="${novel.title}">Novel Title</span>
+                                            <span th:if="${!iterStat.last}">, </span>
+                                        </span>
+                                    </span>
+                                    <span th:if="${animal.novels == null || animal.novels.isEmpty()}">No novels</span>
+                                </td>
                                 <td>
                                     <div class="d-flex gap-2">
                                         <a th:href="@{/admin/animals/edit/{id}(id=${animal.id})}" class="btn btn-sm btn-primary">Edit</a>
@@ -47,8 +58,8 @@
                                 </td>
                             </tr>
                             <!-- If no animals found -->
-                            <tr th:if="${#lists.isEmpty(animals)}">
-                                <td colspan="6" class="text-center">No animals found</td>
+                            <tr th:if="${animals == null || animals.isEmpty()}">
+                                <td colspan="5" class="text-center">No animals found</td>
                             </tr>
                         </tbody>
                     </table>

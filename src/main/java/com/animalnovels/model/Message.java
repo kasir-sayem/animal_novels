@@ -2,6 +2,7 @@ package com.animalnovels.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,7 +33,8 @@ public class Message {
     
     private LocalDateTime sentAt = LocalDateTime.now();
     
-    // Add this field
+    // Fix for the reserved keyword issue
+    @Column(name = "is_read") // Specify a different column name
     private boolean read = false;
     
     @ManyToOne
@@ -96,7 +98,7 @@ public class Message {
         this.user = user;
     }
     
-    // Add these methods
+    // Getter and setter for read status
     public boolean isRead() {
         return read;
     }
