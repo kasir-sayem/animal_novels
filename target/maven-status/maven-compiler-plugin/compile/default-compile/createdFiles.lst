@@ -19,6 +19,6 @@ com/animalnovels/controller/ContactController.class
 com/animalnovels/controller/HomeController.class
 com/animalnovels/AnimalNovelsApplication.class
 com/animalnovels/config/RedirectDebugFilter.class
-com/animalnovels/model/Message.class
 com/animalnovels/service/UserDetailsServiceImpl.class
+com/animalnovels/model/Message.class
 com/animalnovels/config/SecurityConfig.class
