@@ -26,7 +26,7 @@ public class ApiController {
     @Autowired
     private NovelService novelService;
     
-    // Animal API endpoints
+    
     @GetMapping("/animals")
     public ResponseEntity<List<Animal>> getAllAnimals() {
         return new ResponseEntity<>(animalService.findAll(), HttpStatus.OK);

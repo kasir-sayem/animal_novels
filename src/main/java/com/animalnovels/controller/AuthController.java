@@ -63,7 +63,7 @@ public class AuthController {
             return "auth/register";
         }
 
-        // Set default role to "USER" for new registrations
+        
         user.setRole("USER");
         userService.save(user);
 

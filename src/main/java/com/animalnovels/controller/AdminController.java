@@ -65,7 +65,7 @@ public class AdminController {
         return "admin/animals-simple";
     }
     
-    // API Documentation
+    
     @GetMapping("/api-docs")
     public String apiDocs() {
         return "api-docs";
